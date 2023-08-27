@@ -32,6 +32,25 @@ const create = async (req, res) => {
   });
 };
 
+const getAll = (req, res) => {
+  const { user_id } = req.user;
+  Chat.find({
+    $or: [{ participant_one: user_id }, { participant_two: user_id }],
+  })
+    .populate("participant_one")
+    .populate("participant_tow")
+    .exec(async (error, chats) => {
+      if (error) {
+        return res.status(400).send({ msg: "Error ao obter chats" });
+      }
+
+      //Obter ultima mensagem de cada chat
+
+      res.status(200).send(chats);
+    });
+};
+
 export const ChatController = {
   create,
+  getAll,
 };
