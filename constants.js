@@ -1,5 +1,5 @@
 export const DB_USER = "pbela27360";
-export const DB_PASSWORD = "oA05MxvHQAUiRd6m";
+export const DB_PASSWORD = "";
 export const DB_HOST = "cluster0.pizcwxe.mongodb.net";
 export const IP_SERVER = "localhost";
 

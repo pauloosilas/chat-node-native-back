@@ -50,7 +50,20 @@ const getAll = (req, res) => {
     });
 };
 
+const deleteChat = async (req, res) => {
+  const chat_id = req.params.id;
+
+  Chat.findByIdAndDelete(chat_id, (error) => {
+    if (error) {
+      res.status(400).send({ msg: "Error ao remover o chat" });
+    } else {
+      res.status(200).send({ msg: "chart removido" });
+    }
+  });
+};
+
 export const ChatController = {
   create,
   getAll,
+  deleteChat,
 };
