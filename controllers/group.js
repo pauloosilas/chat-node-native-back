@@ -3,11 +3,12 @@ import { getFilePath } from "../utils/image.js";
 
 //criar um grupo
 const create = (req, res) => {
+  const { user_id } = req.user;
   const group = new Group(req.body);
-  group.creator = req.user.user_id;
+  group.creator = user_id;
   //Recebe um vetor ["", ""] com id dos participantes do grupo req.body.participants e presisa do parse
   group.participants = JSON.parse(req.body.participants);
-
+  group.participants = [...group.participants, user_id];
   if (req.files.image) {
     const imagePath = getFilePath(req.files.image);
     group.image = imagePath;
