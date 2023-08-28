@@ -35,4 +35,5 @@ app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", chatRoutes);
 app.use("/api", chatMessageRoutes);
+
 export { server };
