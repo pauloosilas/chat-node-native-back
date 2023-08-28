@@ -49,8 +49,8 @@ const sendImage = (req, res) => {
   });
 };
 
+// pega todas as mensagens do chat com o ID
 const getAll = async (req, res) => {
-  // pega todas as mensagens do chat com o ID
   const { chat_id } = req.params;
 
   try {
@@ -68,8 +68,21 @@ const getAll = async (req, res) => {
   }
 };
 
+const getTotalMessages = async (req, res) => {
+  const { chat_id } = req.params;
+
+  try {
+    const response = await ChatMessage.find({ chat: chat_id }).count();
+    res.status(200).send(JSON.stringify(response));
+  } catch (error) {
+    res.status(500).send({ msg: "Error no servidor" });
+  }
+};
+
+//pega o total de mensagens
 export const ChatMessageController = {
   send,
   sendImage,
   getAll,
+  getTotalMessages,
 };

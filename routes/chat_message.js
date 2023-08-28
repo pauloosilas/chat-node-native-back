@@ -1,6 +1,6 @@
 import express from "express";
 import multiparty from "connect-multiparty";
-import { ChatMessageController } from "../controllers/index.js";
+import { ChatController, ChatMessageController } from "../controllers/index.js";
 import { mdAuth } from "../middlewares/index.js";
 
 const mdUpload = multiparty({ uploadDir: "./uploads/images" });
@@ -17,6 +17,12 @@ api.get(
   "/chat/message/:chat_id",
   [mdAuth.asureAuth],
   ChatMessageController.getAll
+);
+
+api.get(
+  "/chat/message/total/:chat_id",
+  [mdAuth.asureAuth],
+  ChatMessageController.getTotalMessages
 );
 
 export const chatMessageRoutes = api;
