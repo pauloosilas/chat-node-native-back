@@ -67,7 +67,7 @@ const getAll = async (req, res) => {
     res.status(500).send({ msg: "Error no servidor" });
   }
 };
-
+//pega o total de mensagens
 const getTotalMessages = async (req, res) => {
   const { chat_id } = req.params;
 
@@ -79,10 +79,24 @@ const getTotalMessages = async (req, res) => {
   }
 };
 
-//pega o total de mensagens
+//Pegar a ultima mensagem de um Chat com id do chat
+const getLastMessage = async (req, res) => {
+  const { chat_id } = req.params;
+
+  try {
+    const response = await ChatMessage.findOne({ chat: chat_id }).sort({
+      createdAt: -1, //pega a ultima mensagem criada
+    });
+    res.status(200).send(response || {});
+  } catch (error) {
+    res.status(500).send({ msg: "Error no servidor" });
+  }
+};
+
 export const ChatMessageController = {
   send,
   sendImage,
   getAll,
   getTotalMessages,
+  getLastMessage,
 };

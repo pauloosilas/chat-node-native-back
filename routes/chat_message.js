@@ -25,4 +25,10 @@ api.get(
   ChatMessageController.getTotalMessages
 );
 
+api.get(
+  "/chat/message/last/:chat_id",
+  [mdAuth.asureAuth],
+  ChatMessageController.getLastMessage
+);
+
 export const chatMessageRoutes = api;

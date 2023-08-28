@@ -1,4 +1,4 @@
-import { Chat } from "../models/index.js";
+import { Chat, ChatMessage } from "../models/index.js";
 
 const create = async (req, res) => {
   const { participant_id_one, participant_id_two } = req.body;
@@ -32,6 +32,7 @@ const create = async (req, res) => {
   });
 };
 
+//Pega todos os chats do Usuario pelo id
 const getAll = (req, res) => {
   const { user_id } = req.user;
   Chat.find({
@@ -45,8 +46,20 @@ const getAll = (req, res) => {
       }
 
       //Obter ultima mensagem de cada chat
+      const arrayChats = [];
 
-      res.status(200).send(chats);
+      for await (const chat of chats) {
+        //pega ultima mensagem de cada chat
+        const response = await ChatMessage.findOne({ chat: chat._id }).sort({
+          createdAt: -1,
+        });
+
+        arrayChats.push({
+          ...chat._doc, //doc mongo quarda os documentos
+          last_message_date: response?.createdAt || null,
+        });
+      }
+      res.status(200).send(arrayChats);
     });
 };
 
