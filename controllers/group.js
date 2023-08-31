@@ -27,6 +27,22 @@ const create = (req, res) => {
   });
 };
 
+//pega todos os grupos do usuario com id
+const getAll = (req, res) => {
+  const { user_id } = req.user;
+  Group.find({ participants: user_id })
+    .populate("creator")
+    .populate("participants")
+    .exec((error, groups) => {
+      if (error) {
+        res.status(500).send({ msg: "Error no servidor" });
+      }
+
+      res.status(200).send(groups);
+    });
+};
+
 export const GroupController = {
   create,
+  getAll,
 };
