@@ -57,8 +57,32 @@ const getGroup = (req, res) => {
   }).populate("participants");
 };
 
+const updateGroup = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const group = await Group.findById(id);
+
+  if (name) group.name = name; //verifica que o nome foi enviado
+
+  //verifica se a imagem foi enviada
+  if (req.files.image) {
+    const imagePath = getFilePath(req.files.image);
+    group.image = imagePath;
+  }
+
+  Group.findByIdAndUpdate(id, group, (error) => {
+    if (error) {
+      res.status(500).send({ msg: "Error no servidor" });
+    } else {
+      res.status(200).send({ image: group.image, name: group.name });
+    }
+  });
+};
+
 export const GroupController = {
   create,
   getAll,
   getGroup,
+  updateGroup,
 };
