@@ -42,7 +42,23 @@ const getAll = (req, res) => {
     });
 };
 
+//pega o grupo com id
+const getGroup = (req, res) => {
+  const group_id = req.params.id;
+
+  Group.findById(group_id, (error, groupStorage) => {
+    if (error) {
+      res.status(500).send({ msg: "Error no servidor" });
+    } else if (!groupStorage) {
+      res.status(400).send({ msg: "Não foi encontrado nenhum grupo" });
+    } else {
+      res.status(200).send(groupStorage);
+    }
+  }).populate("participants");
+};
+
 export const GroupController = {
   create,
   getAll,
+  getGroup,
 };
