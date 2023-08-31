@@ -80,9 +80,31 @@ const updateGroup = async (req, res) => {
   });
 };
 
+const exitGroup = async (req, res) => {
+  const { id } = req.params;
+  const { user_id } = req.user;
+
+  const group = await Group.findById(id);
+
+  //cria uma nova lista de participantes, sem o que saiu
+  const newParticipants = group.participants.filter(
+    (participant) => participant.toString() !== user_id
+  );
+
+  const newData = {
+    ...group._doc,
+    participants: newParticipants,
+  };
+
+  await Group.findByIdAndUpdate(id, newData);
+
+  res.status(200).send({ msg: "Você saiu do grupo" });
+};
+
 export const GroupController = {
   create,
   getAll,
   getGroup,
   updateGroup,
+  exitGroup,
 };

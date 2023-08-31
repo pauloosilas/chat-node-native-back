@@ -15,5 +15,6 @@ api.patch(
   [mdAuth.asureAuth, mdUpload],
   GroupController.updateGroup
 );
+api.patch("/group/exit/:id", [mdAuth.asureAuth], GroupController.exitGroup);
 
 export const groupRoutes = api;
