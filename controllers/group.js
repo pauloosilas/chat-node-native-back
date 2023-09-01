@@ -1,4 +1,4 @@
-import { Group } from "../models/index.js";
+import { Group, User } from "../models/index.js";
 import { getFilePath } from "../utils/image.js";
 
 //criar um grupo
@@ -101,10 +101,32 @@ const exitGroup = async (req, res) => {
   res.status(200).send({ msg: "Você saiu do grupo" });
 };
 
+const addParticipants = async (req, res) => {
+  const { id } = req.params;
+  const { users_id } = req.body;
+
+  console.log("USER", users_id);
+  const group = await Group.findById(id);
+  const users = await User.find({ _id: users_id });
+  const arrayObjectIds = [];
+  users.forEach((user) => {
+    arrayObjectIds.push(user._id);
+  });
+  const newData = {
+    ...group._doc,
+    participants: [...group.participants, arrayObjectIds],
+  };
+
+  await Group.findByIdAndUpdate(id, newData);
+
+  res.status(200).send({ msg: "Participantes adicionados ao grupo" });
+};
+
 export const GroupController = {
   create,
   getAll,
   getGroup,
   updateGroup,
   exitGroup,
+  addParticipants,
 };
