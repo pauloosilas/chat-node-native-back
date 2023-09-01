@@ -105,9 +105,9 @@ const addParticipants = async (req, res) => {
   const { id } = req.params;
   const { users_id } = req.body;
 
-  console.log("USER", users_id);
   const group = await Group.findById(id);
   const users = await User.find({ _id: users_id });
+
   const arrayObjectIds = [];
   users.forEach((user) => {
     arrayObjectIds.push(user._id);
@@ -122,6 +122,24 @@ const addParticipants = async (req, res) => {
   res.status(200).send({ msg: "Participantes adicionados ao grupo" });
 };
 
+const banParticipants = async (req, res) => {
+  const { group_id, user_id } = req.body;
+
+  const group = await Group.findById(group_id);
+  const newParticipants = group.participants.filter(
+    (participant) => participant.toString() !== user_id
+  );
+
+  const newData = {
+    ...group._doc,
+    participants: newParticipants,
+  };
+
+  await Group.findByIdAndUpdate(group_id, newData);
+
+  res.status(200).send({ msg: "Usuario banido" });
+};
+
 export const GroupController = {
   create,
   getAll,
@@ -129,4 +147,5 @@ export const GroupController = {
   updateGroup,
   exitGroup,
   addParticipants,
+  banParticipants,
 };
