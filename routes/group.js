@@ -22,4 +22,5 @@ api.patch(
   [mdAuth.asureAuth, mdUpload],
   GroupController.updateGroup
 );
+
 export const groupRoutes = api;
