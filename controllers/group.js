@@ -1,4 +1,4 @@
-import { Group, User } from "../models/index.js";
+import { Group, User, GroupMessage } from "../models/index.js";
 import { getFilePath } from "../utils/image.js";
 
 //criar um grupo
@@ -28,7 +28,7 @@ const create = (req, res) => {
 };
 
 //pega todos os grupos do usuario com id
-const getAll = (req, res) => {
+const getAll = async (req, res) => {
   const { user_id } = req.user;
   Group.find({ participants: user_id })
     .populate("creator")
@@ -38,7 +38,19 @@ const getAll = (req, res) => {
         res.status(500).send({ msg: "Error no servidor" });
       }
 
-      res.status(200).send(groups);
+      const arrayGroups = [];
+      for (const group of groups) {
+        const response = GroupMessage.findOne({ group: group._id }).sort({
+          createdAt: -1,
+        });
+
+        arrayGroups.push({
+          ...group._doc,
+          last_message_date: response?.create || null,
+        });
+      }
+
+      res.status(200).send(arrayGroups);
     });
 };
 
